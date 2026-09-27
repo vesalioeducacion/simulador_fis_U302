@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FÍSICA - Trabajo Mecánico, DCL y Teorema Trabajo-Energía (UCCuyo)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- KaTeX for ultra-fast LaTeX formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <!-- Google Fonts: Outfit & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f7f9f6;
+        }
+        /* Paleta Institucional Verde Oliva UCCuyo */
+        .text-accent { color: #436600; }
+        .bg-accent { background-color: #436600; }
+        .bg-accent-hover:hover { background-color: #324d00; }
+        .bg-accent-light { background-color: #f1f6eb; }
+        .border-accent { border-color: #436600; }
+
+        .text-primary { color: #436600; }
+        .bg-primary { background-color: #436600; }
+        .bg-primary-dark { background-color: #324d00; }
+        .border-primary { border-color: #436600; }
+        
+        .focus-accent:focus {
+            border-color: #436600;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 102, 0, 0.2);
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        canvas {
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800">
+
+    <!-- Cabecera Institucional UCCuyo -->
+    <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-accent flex items-center justify-center text-white font-bold text-xl shadow-md">
+                    F
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-800 tracking-wide uppercase">FÍSICA & BIOFÍSICA</h1>
+                    <p class="text-xs text-gray-500 font-semibold">PreMédico (Facultad de Cs. Médicas - UCCuyo)</p>
+                </div>
+            </div>
+            <!-- Botón Guía de Uso -->
+            <button onclick="openTutorial()" class="flex items-center gap-1.5 px-3 py-1.5 bg-accent text-white text-xs font-semibold rounded-lg shadow-sm hover:opacity-90 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Guía de Uso
+            </button>
+        </div>
+    </header>
+
+    <!-- Contenido Principal con Menú Lateral -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 flex flex-col lg:flex-row gap-6">
+        
+        <!-- Menú de Navegación Lateral -->
+        <nav class="w-full lg:w-64 flex flex-row lg:flex-col gap-2 bg-white p-3 rounded-2xl shadow-sm border border-gray-100 overflow-x-auto lg:overflow-x-visible whitespace-nowrap lg:whitespace-normal sticky top-20 h-fit">
+            <button onclick="switchTab(1)" id="btn-tab-1" class="bg-accent text-white flex-1 lg:flex-none text-left py-2.5 px-4 rounded-xl text-sm font-semibold transition">
+                1. Trabajo Vectorial & Tipos
+            </button>
+            <button onclick="switchTab(2)" id="btn-tab-2" class="text-gray-700 hover:bg-gray-100 flex-1 lg:flex-none text-left py-2.5 px-4 rounded-xl text-sm font-medium transition">
+                2. DCL y Trabajo Total
+            </button>
+            <button onclick="switchTab(3)" id="btn-tab-3" class="text-gray-700 hover:bg-gray-100 flex-1 lg:flex-none text-left py-2.5 px-4 rounded-xl text-sm font-medium transition">
+                3. Teorema Trabajo-Energía
+            </button>
+            <button onclick="switchTab(4)" id="btn-tab-4" class="text-gray-700 hover:bg-gray-100 flex-1 lg:flex-none text-left py-2.5 px-4 rounded-xl text-sm font-medium transition">
+                4. Laboratorio de Despeje
+            </button>
+        </nav>
+
+        <!-- Contenedores de Sección -->
+        <div class="flex-1 overflow-hidden space-y-6">
+            
+            <!-- ==================== MÓDULO 1: DEFINICIÓN Y TIPOS DE TRABAJO ==================== -->
+            <section id="module-1" class="module-content block space-y-6">
+                <!-- Header Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-1">Definición Vectorial del Trabajo Mecánico</h2>
+                    <p class="text-xs text-gray-500">
+                        El trabajo mecánico (\(W\)) es una magnitud escalar producida por la acción de una fuerza sobre un cuerpo a lo largo de un desplazamiento. Representa la transferencia efectiva de energía mediante el producto escalar:
+                    </p>
+                    <div class="bg-accent-light border border-accent/20 p-3 rounded-xl text-center my-3">
+                        <div class="text-accent font-semibold text-xs uppercase tracking-wide mb-1">Expresión Matemática Formal</div>
+                        <div class="text-base text-gray-900 font-medium">$$W = \vec{F} \cdot \vec{s} = F \cdot s \cdot \cos(\theta)$$</div>
+                    </div>
+                </div>
+
+                <!-- Panel Interactivo Módulo 1 -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Controles -->
+                    <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Parámetros Cinemáticos</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Fuerza \(F\)</span>
+                                        <span class="text-accent code-font"><span id="m1-f-val">50</span> N</span>
+                                    </div>
+                                    <input type="range" id="m1-f" min="0" max="100" value="50" class="w-full accent-[#436600]" oninput="updateModule1()">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Desplazamiento \(s\)</span>
+                                        <span class="text-accent code-font"><span id="m1-s-val">10</span> m</span>
+                                    </div>
+                                    <input type="range" id="m1-s" min="1" max="25" value="10" class="w-full accent-[#436600]" oninput="updateModule1()">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Ángulo \(\theta\)</span>
+                                        <span class="text-accent code-font"><span id="m1-angle-val">30</span>°</span>
+                                    </div>
+                                    <input type="range" id="m1-angle" min="0" max="180" value="30" class="w-full accent-[#436600]" oninput="updateModule1()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Métricas de Resultado -->
+                        <div class="mt-6 pt-4 border-t border-gray-100">
+                            <div class="grid grid-cols-2 gap-3 text-center">
+                                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                    <span class="text-xs text-gray-500 block mb-1">Clasificación</span>
+                                    <span id="m1-tipo" class="text-sm font-bold text-emerald-600">Positivo</span>
+                                </div>
+                                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                    <span class="text-xs text-gray-500 block mb-1">Trabajo Realizado \(W\)</span>
+                                    <span id="m1-w-res" class="text-sm font-bold text-accent code-font">433.0 J</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas y Clasificación Angular -->
+                    <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Simulación Vectorial en Canvas</h3>
+                            <span class="text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-mono">DCL Dinámico</span>
+                        </div>
+                        <div class="relative flex-grow bg-slate-900 rounded-xl overflow-hidden min-h-[260px] shadow-inner">
+                            <canvas id="canvas-m1" class="w-full h-full"></canvas>
+                        </div>
+                        <div class="mt-4 grid grid-cols-3 gap-2 text-center text-xs">
+                            <div class="bg-emerald-50 text-emerald-800 p-2.5 rounded-xl border border-emerald-200">
+                                <div class="font-bold mb-0.5">Positivo</div>
+                                <div class="text-[11px] font-mono">\(0^\circ \le \theta < 90^\circ\)</div>
+                                <div class="text-[10px] text-emerald-700 mt-0.5">Aporta energía / acelera</div>
+                            </div>
+                            <div class="bg-amber-50 text-amber-800 p-2.5 rounded-xl border border-amber-200">
+                                <div class="font-bold mb-0.5">Nulo</div>
+                                <div class="text-[11px] font-mono">\(\theta = 90^\circ\)</div>
+                                <div class="text-[10px] text-amber-700 mt-0.5">\(W = 0\) (Perpendicular)</div>
+                            </div>
+                            <div class="bg-rose-50 text-rose-800 p-2.5 rounded-xl border border-rose-200">
+                                <div class="font-bold mb-0.5">Negativo</div>
+                                <div class="text-[11px] font-mono">\(90^\circ < \theta \le 180^\circ\)</div>
+                                <div class="text-[10px] text-rose-700 mt-0.5">Disipa energía / frena</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== MÓDULO 2: DCL Y TRABAJO TOTAL ==================== -->
+            <section id="module-2" class="module-content hidden space-y-6">
+                <!-- Header Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-1">Diagrama de Cuerpo Libre (DCL) y Trabajo Total</h2>
+                    <p class="text-xs text-gray-500">
+                        Evaluación multifuerza sobre un cuerpo arrastrado horizontalmente: fuerza de tracción con inclinación (\(\vec{F}\)), fricción dinámica (\(\vec{f}_k\)), peso gravitatorio (\(\vec{P}\)) y reacción normal (\(\vec{N}\)).
+                    </p>
+                    <div class="bg-accent-light border border-accent/20 p-3 rounded-xl text-center my-3">
+                        <div class="text-accent font-semibold text-xs uppercase tracking-wide mb-1">Sumatoria Escalar del Trabajo Total</div>
+                        <div class="text-base text-gray-900 font-medium">$$W_{tot} = \sum W_i = W_F + W_{f_k} + W_P + W_N = (F\cos\theta - f_k)\cdot s$$</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Controles -->
+                    <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Parámetros del Sistema</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Masa \(m\)</span>
+                                        <span class="text-accent code-font"><span id="m2-m-val">20</span> kg</span>
+                                    </div>
+                                    <input type="range" id="m2-m" min="5" max="100" value="20" class="w-full accent-[#436600]" oninput="updateModule2()">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Tracción \(F\)</span>
+                                        <span class="text-accent code-font"><span id="m2-f-val">120</span> N</span>
+                                    </div>
+                                    <input type="range" id="m2-f" min="0" max="250" value="120" class="w-full accent-[#436600]" oninput="updateModule2()">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Ángulo \(\theta\)</span>
+                                        <span class="text-accent code-font"><span id="m2-angle-val">25</span>°</span>
+                                    </div>
+                                    <input type="range" id="m2-angle" min="0" max="60" value="25" class="w-full accent-[#436600]" oninput="updateModule2()">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Coeficiente de fricción \(\mu_k\)</span>
+                                        <span class="text-accent code-font"><span id="m2-mu-val">0.20</span></span>
+                                    </div>
+                                    <input type="range" id="m2-mu" min="0" max="0.5" step="0.01" value="0.20" class="w-full accent-[#436600]" oninput="updateModule2()">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Desplazamiento \(s\)</span>
+                                        <span class="text-accent code-font"><span id="m2-s-val">15</span> m</span>
+                                    </div>
+                                    <input type="range" id="m2-s" min="2" max="50" value="15" class="w-full accent-[#436600]" oninput="updateModule2()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <button onclick="runModule2Animation()" class="w-full py-2.5 bg-accent hover:bg-accent-hover text-white rounded-xl font-semibold text-sm transition shadow-sm flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path></svg>
+                                Simular Dinámica de Arrastre
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Canvas y Desglose Energético -->
+                    <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Visualización DCL Dinámica</h3>
+                                <span class="text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-mono">Fuerzas coplanares</span>
+                            </div>
+                            <div class="relative bg-slate-900 rounded-xl overflow-hidden h-[240px] mb-4 shadow-inner">
+                                <canvas id="canvas-m2" class="w-full h-full"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Balances de Trabajo -->
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 text-xs space-y-2">
+                            <div class="grid grid-cols-4 gap-2 text-center font-medium">
+                                <div class="bg-white p-2 rounded-lg border border-gray-200">
+                                    <span class="text-gray-500 block text-[11px]">\(W(\vec{F})\)</span>
+                                    <span id="m2-wf" class="font-bold text-accent code-font text-xs">0 J</span>
+                                </div>
+                                <div class="bg-white p-2 rounded-lg border border-gray-200">
+                                    <span class="text-gray-500 block text-[11px]">\(W(\vec{f}_k)\)</span>
+                                    <span id="m2-wfrict" class="font-bold text-rose-600 code-font text-xs">0 J</span>
+                                </div>
+                                <div class="bg-white p-2 rounded-lg border border-gray-200">
+                                    <span class="text-gray-500 block text-[11px]">\(W(\vec{P}+\vec{N})\)</span>
+                                    <span id="m2-wother" class="font-bold text-gray-500 code-font text-xs">0 J</span>
+                                </div>
+                                <div class="bg-accent-light p-2 rounded-lg border border-accent/30">
+                                    <span class="text-accent block font-bold text-[11px]">\(W_{total}\)</span>
+                                    <span id="m2-wtotal" class="font-bold text-accent code-font text-xs">0 J</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== MÓDULO 3: TEOREMA TRABAJO-ENERGÍA CINÉTICA ==================== -->
+            <section id="module-3" class="module-content hidden space-y-6">
+                <!-- Header Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-1">Teorema del Trabajo y la Energía Cinética</h2>
+                    <p class="text-xs text-gray-500">
+                        El trabajo neto o total realizado por la sumatoria de todas las fuerzas sobre una partícula puntual equivale exactamente a la variación de su energía cinética (\(\Delta K\)).
+                    </p>
+                    <div class="bg-accent-light border border-accent/20 p-3 rounded-xl text-center my-3">
+                        <div class="text-accent font-semibold text-xs uppercase tracking-wide mb-1">Teorema Trabajo-Energía</div>
+                        <div class="text-base text-gray-900 font-medium">$$W_{tot} = \Delta K = K_2 - K_1 = \frac{1}{2}m(v_2^2 - v_1^2)$$</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Controles -->
+                    <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wider">Variables Cinemáticas y Trabajo</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Masa \(m\)</span>
+                                        <span class="text-accent code-font"><span id="m3-m-val">10</span> kg</span>
+                                    </div>
+                                    <input type="range" id="m3-m" min="1" max="50" value="10" class="w-full accent-[#436600]" oninput="updateModule3()">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Rapidez inicial \(v_1\)</span>
+                                        <span class="text-accent code-font"><span id="m3-v1-val">2</span> m/s</span>
+                                    </div>
+                                    <input type="range" id="m3-v1" min="0" max="20" value="2" class="w-full accent-[#436600]" oninput="updateModule3()">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-gray-700 mb-1">
+                                        <span>Trabajo neto \(W_{tot}\)</span>
+                                        <span class="text-accent code-font"><span id="m3-w-val">300</span> J</span>
+                                    </div>
+                                    <input type="range" id="m3-w" min="-500" max="1000" step="10" value="300" class="w-full accent-[#436600]" oninput="updateModule3()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Balances Energéticos -->
+                        <div class="mt-6 pt-4 border-t border-gray-100 bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-2">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-gray-600 font-medium">Energía Cinética Inicial (\(K_1\)):</span>
+                                <span id="m3-k1" class="font-bold text-gray-800 code-font">20.0 J</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-gray-600 font-medium">Energía Cinética Final (\(K_2\)):</span>
+                                <span id="m3-k2" class="font-bold text-accent code-font">320.0 J</span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm pt-2 border-t border-gray-200">
+                                <span class="text-gray-800 font-bold">Rapidez Final Despejada (\(v_2\)):</span>
+                                <span id="m3-v2" class="font-bold text-emerald-700 code-font text-base">8.00 m/s</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas y Gráfico de Energía -->
+                    <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Dinámica de Transición de Rapidez</h3>
+                            <span class="text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-mono">\(v_2 = \sqrt{v_1^2 + \frac{2W}{m}}\)</span>
+                        </div>
+                        <div class="relative flex-grow bg-slate-900 rounded-xl overflow-hidden min-h-[300px] shadow-inner">
+                            <canvas id="canvas-m3" class="w-full h-full"></canvas>
+                        </div>
+                        <div class="mt-3 text-[11px] text-gray-500 text-center">
+                            Si \(W_{tot} < 0\) y \(|W_{tot}| \ge K_1\), la partícula se detiene por disipación completa de energía (\(v_2 = 0\)).
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== MÓDULO 4: CASO PRÁCTICO (LABORATORIO DE DESPEJE) ==================== -->
+            <section id="module-4" class="module-content hidden space-y-6">
+                <!-- Header Card -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h2 class="text-xl font-bold text-gray-800 mb-1">Laboratorio de Despeje y Resolución de Casos Prácticos</h2>
+                    <p class="text-xs text-gray-500">
+                        Entrenamiento guiado con retroalimentación inmediata paso a paso para ejercitar la articulación conceptual: peso (\(P=mg\)), trabajo (\(W=F\cdot s\)) y teorema trabajo-energía para hallar rapidez final.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Problema y Pasos -->
+                    <div class="lg:col-span-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <!-- Enunciado -->
+                            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 text-xs space-y-2 mb-4">
+                                <div class="flex items-center gap-1.5 font-bold text-gray-800 uppercase text-[11px]">
+                                    <span class="w-2 h-2 rounded-full bg-accent"></span>
+                                    Enunciado del Caso Clínico:
+                                </div>
+                                <p class="text-gray-700 leading-relaxed" id="m4-enunciado">
+                                    Un paciente en camilla rodante de peso \(P = 490\text{ N}\) (\(g = 9.8\text{ m/s}^2\)) parte del reposo (\(v_1 = 0\)). Un camillero aplica una fuerza horizontal constante de \(150\text{ N}\) a lo largo de un pasillo de \(4.0\text{ m}\). Despreciando la fricción, determine la masa del sistema, el trabajo total y la rapidez final \(v_2\).
+                                </p>
+                            </div>
+
+                            <!-- Pasos de Validación -->
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700">Paso 1: Masa calculada (\(m = P/g\)) en kg:</label>
+                                    <div class="flex space-x-2 mt-1">
+                                        <input type="number" step="any" id="ans-m" class="w-full px-3 py-2 border rounded-xl text-sm focus-accent code-font" placeholder="Ej. 50">
+                                        <button onclick="checkM4Step(1)" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-xl text-xs font-semibold transition">Validar</button>
+                                    </div>
+                                    <span id="feedback-1" class="text-xs font-semibold mt-1 block"></span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700">Paso 2: Trabajo Total (\(W = F \cdot s\)) en Joules:</label>
+                                    <div class="flex space-x-2 mt-1">
+                                        <input type="number" step="any" id="ans-w" class="w-full px-3 py-2 border rounded-xl text-sm focus-accent code-font" placeholder="Ej. 600">
+                                        <button onclick="checkM4Step(2)" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-xl text-xs font-semibold transition">Validar</button>
+                                    </div>
+                                    <span id="feedback-2" class="text-xs font-semibold mt-1 block"></span>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700">Paso 3: Rapidez Final (\(v_2 = \sqrt{2W/m}\)) en m/s:</label>
+                                    <div class="flex space-x-2 mt-1">
+                                        <input type="number" step="any" id="ans-v2" class="w-full px-3 py-2 border rounded-xl text-sm focus-accent code-font" placeholder="Ej. 4.90">
+                                        <button onclick="checkM4Step(3)" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-xl text-xs font-semibold transition">Validar</button>
+                                    </div>
+                                    <span id="feedback-3" class="text-xs font-semibold mt-1 block"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-gray-100 flex flex-wrap gap-2 justify-between">
+                            <button onclick="randomizeM4Case()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold transition">
+                                🔄 Nuevo Caso Aleatorio
+                            </button>
+                            <button onclick="showM4Solution()" class="px-4 py-2 bg-accent hover:bg-accent-hover text-white rounded-xl text-xs font-semibold transition">
+                                💡 Ver Resolución Analítica
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Visualización del Caso y Resolución -->
+                    <div class="lg:col-span-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Esquema Físico del Traslado</h3>
+                                <span class="text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-mono">Plano Horizontal</span>
+                            </div>
+                            <div class="relative bg-slate-900 rounded-xl overflow-hidden h-[240px] mb-4 shadow-inner">
+                                <canvas id="canvas-m4" class="w-full h-full"></canvas>
+                            </div>
+                        </div>
+
+                        <div id="m4-solution-box" class="bg-accent-light border border-accent/30 p-4 rounded-xl text-xs text-gray-800 hidden space-y-2">
+                            <p class="font-bold text-accent uppercase text-[11px] tracking-wide">Resolución Analítica Oficial:</p>
+                            <div id="m4-solution-text" class="space-y-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer Institucional -->
+    <footer class="bg-white border-t border-gray-200 py-4 mt-8 text-center text-xs text-gray-500">
+        Desarrollado por vesalio - Todos los derechos reservados
+    </footer>
+
+    <!-- MODAL: GUÍA DE USO -->
+    <div id="tutorial-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto custom-scroll">
+            <div class="flex items-center justify-between border-b pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-accent"></span>
+                    <h3 class="text-base font-bold text-gray-800 uppercase tracking-wide">Guía de Uso del Simulador</h3>
+                </div>
+                <button onclick="closeTutorial()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            </div>
+            
+            <div class="space-y-4 text-xs text-gray-600 leading-relaxed">
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <span class="font-bold text-gray-800 text-xs block mb-1">Propósito Pedagógico (Curso de Ingreso UCCuyo):</span>
+                    Este simulador interactivo permite dominar los conceptos esenciales de la mecánica clásica aplicados a la física y biofísica médica: el trabajo como producto escalar, el análisis de fuerzas en el plano mediante DCL, la sumatoria escalar de trabajos, el Teorema Trabajo-Energía Cinética (\(W_{tot} = \Delta K\)) y la resolución analítica con despejes algebraicos de rapidez final (\(v_2\)).
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-800 text-sm mb-1 text-accent">1. Módulo 1: Trabajo Vectorial & Tipos</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-1 text-gray-600">
+                        <li><strong>Controles interactivos:</strong> Sliders de magnitud de fuerza (\(F\)), desplazamiento horizontal (\(s\)) y ángulo de inclinación (\(\theta\) entre \(0^\circ\) y \(180^\circ\)).</li>
+                        <li><strong>Cálculo en tiempo real:</strong> Evaluación del producto escalar formal \(W = \vec{F} \cdot \vec{s} = F \cdot s \cdot \cos\theta\) expresado en Joules (\(\text{J}\)).</li>
+                        <li><strong>Clasificación dinámica y Canvas 2D:</strong> Representación gráfica con vectores en colores (fuerza en ámbar con arco punteado y desplazamiento en verde), con identificación automática entre <em>Trabajo Positivo / Motor</em> (\(0^\circ \le \theta < 90^\circ\)), <em>Trabajo Nulo</em> (\(\theta = 90^\circ\), fuerza perpendicular donde \(W=0\)) y <em>Trabajo Negativo / Resistente</em> (\(90^\circ < \theta \le 180^\circ\)).</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-gray-800 text-sm mb-1 text-accent">2. Módulo 2: DCL y Trabajo Total (Fuerzas Coplanares)</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-1 text-gray-600">
+                        <li><strong>Parámetros configurables:</strong> Masa del cuerpo (\(m\)), fuerza y ángulo de tracción (\(F, \theta\)), coeficiente de rozamiento dinámico (\(\mu_k\)) y desplazamiento (\(s\)).</li>
+                        <li><strong>Diagrama de Cuerpo Libre (DCL):</strong> Visualización de los cuatro vectores coplanares: peso (\(\vec{P}\)), normal ajustada (\(N = mg - F\sin\theta\)), fuerza de fricción (\(f_k = \mu_k N\)) y tracción inclinada (\(\vec{F}\)).</li>
+                        <li><strong>Animación dinámica:</strong> El botón <em>"Simular Dinámica de Arrastre"</em> anima el desplazamiento horizontal del cuerpo a lo largo de la pista.</li>
+                        <li><strong>Desglose tabular de trabajos:</strong> Cálculo individual de \(W(\vec{F})\), \(W(\vec{f}_k)\), comprobación de que el peso y la normal no realizan trabajo (\(W=0\) por ser perpendiculares al suelo) y sumatoria del trabajo neto total \(W_{total}\).</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold text-gray-800 text-sm mb-1 text-accent">3. Módulo 3: Teorema Trabajo-Energía Cinética</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-1 text-gray-600">
+                        <li><strong>Fundamento teórico:</strong> Ilustración del teorema \(W_{tot} = \Delta K = K_2 - K_1 = \frac{1}{2}m(v_2^2 - v_1^2)\).</li>
+                        <li><strong>Variables dinámicas:</strong> Ajuste de masa (\(m\)), rapidez inicial (\(v_1\)) y trabajo total neto (\(W_{tot}\)), permitiendo tanto trabajos positivos como negativos.</li>
+                        <li><strong>Resultados cinéticos:</strong> Despliegue simultáneo de la energía cinética inicial (\(K_1\)), final (\(K_2\)) y la rapidez final despejada: \(v_2 = \sqrt{v_1^2 + \frac{2W_{tot}}{m}}\).</li>
+                        <li><strong>Visualización en Canvas:</strong> Comparación gráfica de los estados inicial y final, con radio escalado proporcional a la rapidez y conector dinámico verde (aceleración) o rojo (frenado / detención).</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-800 text-sm mb-1 text-accent">4. Módulo 4: Laboratorio de Despeje (Casos Prácticos Médicos)</h4>
+                    <ul class="list-disc list-inside space-y-1 ml-1 text-gray-600">
+                        <li><strong>Contexto hospitalario:</strong> Problemas aplicados de traslados de camillas con pacientes, especificando peso (\(P\)), fuerza horizontal del camillero (\(F\)) y distancia recorrida (\(s\)).</li>
+                        <li><strong>Resolución guiada en 3 pasos:</strong>
+                            <ol class="list-decimal list-inside ml-2 space-y-0.5 mt-1">
+                                <li>Cálculo de la masa inercial (\(m = P/g\), con \(g = 9.8\text{ m/s}^2\)).</li>
+                                <li>Cálculo del trabajo mecánico aplicado (\(W = F \cdot s\)).</li>
+                                <li>Despeje y cálculo de la rapidez final adquirida (\(v_2 = \sqrt{2W/m}\)).</li>
+                            </ol>
+                        </li>
+                        <li><strong>Retroalimentación pedagógica instantánea:</strong> Botón de validación individual por paso con tolerancia numérica y mensajes correctivos.</li>
+                        <li><strong>Generador de casos & Resolución completa:</strong> Botón <em>"Nuevo Caso Aleatorio"</em> para generar infinitos ejercicios y <em>"Ver Resolución Analítica"</em> para consultar el desarrollo algebraico formal con fórmulas en KaTeX.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t flex justify-end">
+                <button onclick="closeTutorial()" class="px-5 py-2 bg-accent text-white text-xs font-semibold rounded-xl hover:bg-accent-hover transition shadow-sm">
+                    Entendido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script del Simulador -->
+    <script>
+        // Modal Guía de Uso
+        function openTutorial() {
+            document.getElementById('tutorial-modal').classList.remove('hidden');
+        }
+        function closeTutorial() {
+            document.getElementById('tutorial-modal').classList.add('hidden');
+        }
+
+        // Navegación entre pestañas
+        function switchTab(tabIndex) {
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`btn-tab-${i}`);
+                const mod = document.getElementById(`module-${i}`);
+                if (i === tabIndex) {
+                    btn.className = "bg-accent text-white flex-1 lg:flex-none text-left py-2.5 px-4 rounded-xl text-sm font-semibold transition";
+                    mod.classList.remove('hidden');
+                    mod.classList.add('block');
+                } else {
+                    btn.className = "text-gray-700 hover:bg-gray-100 flex-1 lg:flex-none text-left py-2.5 px-4 rounded-xl text-sm font-medium transition";
+                    mod.classList.remove('block');
+                    mod.classList.add('hidden');
+                }
+            }
+
+            setTimeout(() => {
+                resizeCanvases();
+                if (tabIndex === 1) updateModule1();
+                if (tabIndex === 2) updateModule2();
+                if (tabIndex === 3) updateModule3();
+                if (tabIndex === 4) updateModule4Visual();
+                renderKaTeX();
+            }, 50);
+        }
+
+        function renderKaTeX() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '\\[', right: '\\]', display: true},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+
+        // ==================== MÓDULO 1: LÓGICA & CANVAS ====================
+        function updateModule1() {
+            const F = parseFloat(document.getElementById('m1-f').value);
+            const s = parseFloat(document.getElementById('m1-s').value);
+            const angleDeg = parseFloat(document.getElementById('m1-angle').value);
+
+            document.getElementById('m1-f-val').innerText = F;
+            document.getElementById('m1-s-val').innerText = s;
+            document.getElementById('m1-angle-val').innerText = angleDeg;
+
+            const rad = angleDeg * Math.PI / 180;
+            const W = F * s * Math.cos(rad);
+
+            let tipo = "Positivo (Motor)";
+            let color = "text-emerald-600";
+            if (Math.abs(angleDeg - 90) < 0.5) {
+                tipo = "Nulo (W = 0)";
+                color = "text-amber-600";
+            } else if (angleDeg > 90) {
+                tipo = "Negativo (Resistente)";
+                color = "text-rose-600";
+            }
+
+            const tipoEl = document.getElementById('m1-tipo');
+            tipoEl.innerText = tipo;
+            tipoEl.className = `text-sm font-bold ${color}`;
+            document.getElementById('m1-w-res').innerText = W.toFixed(1) + " J";
+
+            drawModule1(F, s, angleDeg, W);
+        }
+
+        function drawModule1(F, s, angleDeg, W) {
+            const canvas = document.getElementById('canvas-m1');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Superficie de apoyo
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(40, height - 70);
+            ctx.lineTo(width - 40, height - 70);
+            ctx.stroke();
+
+            // Bloque
+            const boxWidth = 70;
+            const boxHeight = 45;
+            const startX = 80;
+            const startY = height - 70 - boxHeight;
+
+            ctx.fillStyle = '#436600';
+            ctx.beginPath();
+            ctx.roundRect(startX, startY, boxWidth, boxHeight, 8);
+            ctx.fill();
+
+            // Centro del cuerpo
+            const cx = startX + boxWidth / 2;
+            const cy = startY + boxHeight / 2;
+
+            // Vector Desplazamiento s
+            drawArrow(ctx, cx, startY + boxHeight + 25, cx + 130, startY + boxHeight + 25, '#10b981', `s = ${s} m`);
+
+            // Vector Fuerza F
+            const rad = angleDeg * Math.PI / 180;
+            const fLength = Math.min(F * 1.3, 130);
+            const fx = cx + Math.cos(rad) * fLength;
+            const fy = cy - Math.sin(rad) * fLength;
+
+            drawArrow(ctx, cx, cy, fx, fy, '#f59e0b', `F = ${F} N (θ = ${angleDeg}°)`);
+
+            // Arco de ángulo si aplica
+            if (angleDeg > 0 && angleDeg < 180) {
+                ctx.strokeStyle = '#94a3b8';
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+                ctx.arc(cx, cy, 35, 0, -rad, true);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // Datos informativos en canvas
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Outfit, sans-serif';
+            ctx.fillText(`Ángulo θ: ${angleDeg}°`, 20, 30);
+            ctx.fillText(`Trabajo W: ${W.toFixed(1)} J`, 20, 50);
+        }
+
+        // ==================== MÓDULO 2: LÓGICA & CANVAS ====================
+        function updateModule2() {
+            const m = parseFloat(document.getElementById('m2-m').value);
+            const F = parseFloat(document.getElementById('m2-f').value);
+            const angleDeg = parseFloat(document.getElementById('m2-angle').value);
+            const mu = parseFloat(document.getElementById('m2-mu').value);
+            const s = parseFloat(document.getElementById('m2-s').value);
+
+            document.getElementById('m2-m-val').innerText = m;
+            document.getElementById('m2-f-val').innerText = F;
+            document.getElementById('m2-angle-val').innerText = angleDeg;
+            document.getElementById('m2-mu-val').innerText = mu.toFixed(2);
+            document.getElementById('m2-s-val').innerText = s;
+
+            const g = 9.8;
+            const P = m * g;
+            const rad = angleDeg * Math.PI / 180;
+
+            const Fy = F * Math.sin(rad);
+            const Fx = F * Math.cos(rad);
+
+            // N = P - Fy (siempre N >= 0)
+            const N = Math.max(0, P - Fy);
+            const fk = mu * N;
+
+            const W_F = Fx * s;
+            const W_frict = -fk * s;
+            const W_other = 0; // P y N perpendiculares
+            const W_total = W_F + W_frict;
+
+            document.getElementById('m2-wf').innerText = W_F.toFixed(1) + " J";
+            document.getElementById('m2-wfrict').innerText = W_frict.toFixed(1) + " J";
+            document.getElementById('m2-wother').innerText = "0 J";
+            document.getElementById('m2-wtotal').innerText = W_total.toFixed(1) + " J";
+
+            drawModule2(0, F, angleDeg, N, fk, P);
+        }
+
+        let animProgress = 0;
+        let animId = null;
+        function runModule2Animation() {
+            if (animId) cancelAnimationFrame(animId);
+            animProgress = 0;
+            function step() {
+                animProgress += 0.02;
+                if (animProgress > 1) animProgress = 1;
+
+                const F = parseFloat(document.getElementById('m2-f').value);
+                const angleDeg = parseFloat(document.getElementById('m2-angle').value);
+                const m = parseFloat(document.getElementById('m2-m').value);
+                const mu = parseFloat(document.getElementById('m2-mu').value);
+                const g = 9.8;
+                const N = Math.max(0, m * g - F * Math.sin(angleDeg * Math.PI / 180));
+                const fk = mu * N;
+                const P = m * g;
+
+                drawModule2(animProgress, F, angleDeg, N, fk, P);
+
+                if (animProgress < 1) {
+                    animId = requestAnimationFrame(step);
+                }
+            }
+            step();
+        }
+
+        function drawModule2(progress, F, angleDeg, N, fk, P) {
+            const canvas = document.getElementById('canvas-m2');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Suelo
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(30, height - 60);
+            ctx.lineTo(width - 30, height - 60);
+            ctx.stroke();
+
+            // Trineo en posición animada
+            const maxTravel = width - 180;
+            const startX = 60;
+            const currentX = startX + progress * maxTravel;
+            const boxWidth = 70;
+            const boxHeight = 45;
+            const currentY = height - 60 - boxHeight;
+
+            // Cuerpo del bloque
+            ctx.fillStyle = '#436600';
+            ctx.beginPath();
+            ctx.roundRect(currentX, currentY, boxWidth, boxHeight, 8);
+            ctx.fill();
+
+            const cx = currentX + boxWidth / 2;
+            const cy = currentY + boxHeight / 2;
+
+            // Vectores de fuerza en DCL
+            // Peso P (Abajo)
+            drawArrow(ctx, cx, cy, cx, cy + 45, '#e11d48', `P = ${P.toFixed(0)} N`);
+            // Normal N (Arriba)
+            drawArrow(ctx, cx, cy, cx, cy - 45, '#10b981', `N = ${N.toFixed(0)} N`);
+            // Fricción fk (Atrás)
+            drawArrow(ctx, cx, cy, cx - 45, cy, '#f59e0b', `fk = ${fk.toFixed(0)} N`);
+            // Tracción F (Con ángulo)
+            const rad = angleDeg * Math.PI / 180;
+            drawArrow(ctx, cx, cy, cx + Math.cos(rad) * 60, cy - Math.sin(rad) * 60, '#38bdf8', `F = ${F} N`);
+        }
+
+        // ==================== MÓDULO 3: LÓGICA & CANVAS ====================
+        function updateModule3() {
+            const m = parseFloat(document.getElementById('m3-m').value);
+            const v1 = parseFloat(document.getElementById('m3-v1').value);
+            const W_tot = parseFloat(document.getElementById('m3-w').value);
+
+            document.getElementById('m3-m-val').innerText = m;
+            document.getElementById('m3-v1-val').innerText = v1;
+            document.getElementById('m3-w-val').innerText = W_tot;
+
+            const K1 = 0.5 * m * v1 * v1;
+            const K2 = K1 + W_tot;
+
+            let v2 = 0;
+            if (K2 >= 0) {
+                v2 = Math.sqrt((2 * K2) / m);
+            } else {
+                v2 = 0; // Freno total
+            }
+
+            document.getElementById('m3-k1').innerText = K1.toFixed(1) + " J";
+            document.getElementById('m3-k2').innerText = (K2 >= 0 ? K2.toFixed(1) : "0.0") + " J";
+            document.getElementById('m3-v2').innerText = v2.toFixed(2) + " m/s";
+
+            drawModule3(v1, v2, W_tot);
+        }
+
+        function drawModule3(v1, v2, W_tot) {
+            const canvas = document.getElementById('canvas-m3');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Pista visual
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(40, height / 2 + 35);
+            ctx.lineTo(width - 40, height / 2 + 35);
+            ctx.stroke();
+
+            // Objeto en estado inicial (Posición izquierda)
+            ctx.fillStyle = '#64748b';
+            ctx.beginPath();
+            ctx.arc(80, height / 2, 22, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 11px Outfit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`v₁ = ${v1.toFixed(1)}`, 80, height / 2 + 4);
+
+            // Objeto en estado final (Posición derecha)
+            ctx.fillStyle = '#436600';
+            ctx.beginPath();
+            ctx.arc(width - 80, height / 2, 22 + Math.min(v2 * 1.2, 16), 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText(`v₂ = ${v2.toFixed(1)}`, width - 80, height / 2 + 4);
+
+            // Conector dinámico de transferencia energética
+            ctx.strokeStyle = W_tot >= 0 ? '#10b981' : '#f43f5e';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(115, height / 2);
+            ctx.lineTo(width - 120, height / 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Leyendas informativas
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Outfit, sans-serif';
+            ctx.fillText(`Rapidez Inicial (v₁): ${v1.toFixed(1)} m/s`, 30, 35);
+            ctx.fillText(`Trabajo Neto (W_tot): ${W_tot.toFixed(1)} J`, 30, 58);
+            ctx.fillText(`Rapidez Final (v₂): ${v2.toFixed(1)} m/s`, 30, 81);
+        }
+
+        // ==================== MÓDULO 4: CASO PRÁCTICO & DESPEJE ====================
+        let m4Data = { P: 490, g: 9.8, F: 150, s: 4.0, v1: 0 };
+
+        function randomizeM4Case() {
+            const weights = [392, 490, 588, 686];
+            const forces = [120, 150, 180, 210];
+            const dists = [3.0, 4.0, 5.0, 6.0];
+
+            m4Data.P = weights[Math.floor(Math.random() * weights.length)];
+            m4Data.F = forces[Math.floor(Math.random() * forces.length)];
+            m4Data.s = dists[Math.floor(Math.random() * dists.length)];
+
+            document.getElementById('m4-enunciado').innerHTML = 
+                `Un paciente en camilla rodante de peso <strong>P = ${m4Data.P} N</strong> (\(g = 9.8\\text{ m/s}^2\)) parte del reposo (\(v_1 = 0\)). Un camillero aplica una fuerza horizontal constante de <strong>${m4Data.F} N</strong> a lo largo de un pasillo de <strong>${m4Data.s} m</strong>. Despreciando la fricción, determine la masa del sistema, el trabajo total y la rapidez final \(v_2\).`;
+
+            document.getElementById('ans-m').value = '';
+            document.getElementById('ans-w').value = '';
+            document.getElementById('ans-v2').value = '';
+            document.getElementById('feedback-1').innerText = '';
+            document.getElementById('feedback-2').innerText = '';
+            document.getElementById('feedback-3').innerText = '';
+            document.getElementById('m4-solution-box').classList.add('hidden');
+
+            updateModule4Visual();
+            renderKaTeX();
+        }
+
+        function checkM4Step(step) {
+            const correctM = m4Data.P / m4Data.g;
+            const correctW = m4Data.F * m4Data.s;
+            const correctV2 = Math.sqrt((2 * correctW) / correctM);
+
+            if (step === 1) {
+                const val = parseFloat(document.getElementById('ans-m').value);
+                const fb = document.getElementById('feedback-1');
+                if (Math.abs(val - correctM) < 0.5) {
+                    fb.innerText = `¡Correcto! m = P / g = ${correctM.toFixed(1)} kg`;
+                    fb.className = "text-xs font-semibold mt-1 block text-emerald-600";
+                } else {
+                    fb.innerText = "Incorrecto. Recuerde despejar m = P / g con g = 9.8 m/s²";
+                    fb.className = "text-xs font-semibold mt-1 block text-rose-600";
+                }
+            } else if (step === 2) {
+                const val = parseFloat(document.getElementById('ans-w').value);
+                const fb = document.getElementById('feedback-2');
+                if (Math.abs(val - correctW) < 2) {
+                    fb.innerText = `¡Correcto! W = F · s · cos(0°) = ${correctW.toFixed(1)} J`;
+                    fb.className = "text-xs font-semibold mt-1 block text-emerald-600";
+                } else {
+                    fb.innerText = "Incorrecto. Calcule W = F · s (fuerza en la dirección del movimiento)";
+                    fb.className = "text-xs font-semibold mt-1 block text-rose-600";
+                }
+            } else if (step === 3) {
+                const val = parseFloat(document.getElementById('ans-v2').value);
+                const fb = document.getElementById('feedback-3');
+                if (Math.abs(val - correctV2) < 0.25) {
+                    fb.innerText = `¡Excelente! v₂ = √(2W / m) = ${correctV2.toFixed(2)} m/s`;
+                    fb.className = "text-xs font-semibold mt-1 block text-emerald-600";
+                } else {
+                    fb.innerText = "Incorrecto. Aplique W_tot = 1/2 · m · v₂² despejando v₂ = √(2W / m)";
+                    fb.className = "text-xs font-semibold mt-1 block text-rose-600";
+                }
+            }
+        }
+
+        function showM4Solution() {
+            const m = m4Data.P / m4Data.g;
+            const W = m4Data.F * m4Data.s;
+            const v2 = Math.sqrt((2 * W) / m);
+
+            const text = `
+                <div>1. <strong>Masa del sistema:</strong> \\(m = \\frac{P}{g} = \\frac{${m4Data.P}\\text{ N}}{9.8\\text{ m/s}^2} = \\mathbf{${m.toFixed(1)}\\text{ kg}}\\)</div>
+                <div>2. <strong>Trabajo mecánico neto:</strong> \\(W = F \\cdot s \\cdot \\cos(0^\\circ) = ${m4Data.F}\\text{ N} \\cdot ${m4Data.s}\\text{ m} = \\mathbf{${W.toFixed(1)}\\text{ J}}\\)</div>
+                <div>3. <strong>Teorema Trabajo-Energía:</strong> \\(W = \\frac{1}{2}m v_2^2 \\implies v_2 = \\sqrt{\\frac{2W}{m}} = \\sqrt{\\frac{2 \\cdot ${W.toFixed(1)}}{${m.toFixed(1)}}} = \\mathbf{${v2.toFixed(2)}\\text{ m/s}}\\)</div>
+            `;
+            document.getElementById('m4-solution-text').innerHTML = text;
+            document.getElementById('m4-solution-box').classList.remove('hidden');
+            renderKaTeX();
+        }
+
+        function updateModule4Visual() {
+            const canvas = document.getElementById('canvas-m4');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const width = canvas.width;
+            const height = canvas.height;
+
+            // Piso
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(30, height - 50);
+            ctx.lineTo(width - 30, height - 50);
+            ctx.stroke();
+
+            // Camilla médica
+            ctx.fillStyle = '#436600';
+            ctx.beginPath();
+            ctx.roundRect(80, height - 50 - 45, 100, 45, 8);
+            ctx.fill();
+
+            // Ruedas
+            ctx.fillStyle = '#334155';
+            ctx.beginPath();
+            ctx.arc(95, height - 50, 7, 0, 2 * Math.PI);
+            ctx.arc(165, height - 50, 7, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Vector Fuerza aplicada
+            drawArrow(ctx, 180, height - 50 - 22, 260, height - 50 - 22, '#f59e0b', `F = ${m4Data.F} N`);
+
+            // Distancia s
+            drawArrow(ctx, 80, height - 15, 80 + m4Data.s * 25, height - 15, '#10b981', `s = ${m4Data.s} m`);
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Outfit, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Peso P = ${m4Data.P} N`, 30, 30);
+            ctx.fillText(`Rapidez inicial v₁ = 0 m/s`, 30, 52);
+        }
+
+        // ==================== UTILIDADES GRÁFICAS ====================
+        function drawArrow(ctx, x1, y1, x2, y2, color, label) {
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            ctx.save();
+            ctx.translate(x2, y2);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(-8, -4);
+            ctx.lineTo(-8, 4);
+            ctx.fill();
+            ctx.restore();
+
+            if (label) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '11px Outfit, sans-serif';
+                ctx.fillText(label, x2 + 6, y2 + 4);
+            }
+        }
+
+        function resizeCanvases() {
+            document.querySelectorAll('canvas').forEach(canvas => {
+                const rect = canvas.getBoundingClientRect();
+                if (rect.width > 0 && rect.height > 0) {
+                    canvas.width = rect.width;
+                    canvas.height = rect.height;
+                }
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvases();
+            updateModule1();
+            updateModule2();
+            updateModule3();
+            updateModule4Visual();
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            resizeCanvases();
+            switchTab(1);
+            renderKaTeX();
+        });
+    </script>
+</body>
+</html>
